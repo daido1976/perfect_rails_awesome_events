@@ -9,7 +9,6 @@ AllCops:
     - 'tmp/**/*'
   UseCache: true
   CacheRootDirectory: ./tmp
-  # TODO: Style/RedundantBegin の調整が済み次第 2.5 に更新する。
   TargetRubyVersion: 2.5
 
 # rspec の `expect { hoge }` などが対象となり邪魔なので無効にする。
