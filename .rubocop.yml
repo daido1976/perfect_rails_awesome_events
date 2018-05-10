@@ -239,14 +239,6 @@ Style/TrailingCommaInHashLiteral:
 Rails:
   Enabled: true
 
-# 現状追認。
-#
-# @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Rails/HasAndBelongsToMany
-#
-Rails/HasAndBelongsToMany:
-  Include:
-    - app/models/**/*.rb
-
 # やんごとなき理由から dependent を付けない事があるので無効にしておく。
 #
 # @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Rails/HasManyOrHasOneDependent
