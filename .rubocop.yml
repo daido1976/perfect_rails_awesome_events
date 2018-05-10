@@ -153,13 +153,6 @@ Style/Documentation:
 Style/DoubleNegation:
   Enabled: false
 
-# 空 case は使いたいので無効にする。
-#
-# @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Style/EmptyCaseCondition
-#
-Style/EmptyCaseCondition:
-  Enabled: false
-
 # `else` 節で `nil` を返す際は明確に `nil` と書きたいので empty スタイルを採用。
 #
 # @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Style/EmptyElse
