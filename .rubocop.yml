@@ -189,22 +189,6 @@ Style/FormatStringToken:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-# 統一書式となるように設定しておく。
-#
-# @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Style/PercentLiteralDelimiters
-#
-Style/PercentLiteralDelimiters:
-  PreferredDelimiters:
-    '%':  ()
-    '%i': ()
-    '%q': ()
-    '%Q': ()
-    '%r': '{}'
-    '%s': ()
-    '%w': ()
-    '%W': ()
-    '%x': ()
-
 # 現状追認。
 #
 # @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Style/RescueStandardError
