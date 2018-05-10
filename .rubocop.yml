@@ -258,11 +258,4 @@ Rails/SkipsModelValidations:
 # @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Rails/Validation
 #
 Rails/Validation:
-  Enabled: false  
-
-# 現状追認。
-#
-# @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Rails/HttpStatus
-#
-Rails/HttpStatus:
-  EnforcedStyle: numeric
+  Enabled: false
