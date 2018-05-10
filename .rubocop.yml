@@ -98,14 +98,6 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Max: 7
 
-
-# ヒアドキュメントのデリミタは自由で良い気がするので無効にする。
-#
-# @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Naming/HeredocDelimiterNaming
-#
-Naming/HeredocDelimiterNaming:
-  Enabled: false
-
 # 強制する必要はないと考えて無効に。
 #
 # @see https://rubocop.readthedocs.io/en/latest/cops_naming/#namingmemoizedinstancevariablename
