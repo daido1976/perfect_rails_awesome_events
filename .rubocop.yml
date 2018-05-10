@@ -47,7 +47,7 @@ Metrics/BlockNesting:
 #
 Metrics/ClassLength:
   CountComments: false
-  Max: 400
+  Max: 200
 
 # 現状追認。
 #
