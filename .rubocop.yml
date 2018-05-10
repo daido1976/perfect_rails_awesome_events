@@ -241,13 +241,6 @@ Rails:
 
 # 現状追認。
 #
-# @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Rails/Date
-#
-Rails/Date:
-  EnforcedStyle: flexible
-
-# 現状追認。
-#
 # @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Rails/FindBy
 #
 Rails/FindBy:
