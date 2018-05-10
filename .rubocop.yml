@@ -246,14 +246,6 @@ Rails:
 Rails/HasManyOrHasOneDependent:
   Enabled: false
 
-# 現状追認。
-#
-# @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Rails/ScopeArgs
-#
-Rails/ScopeArgs:
-  Include:
-    - app/models/**/*.rb
-
 # やんごとなき理由からバリデーションを回避することはよくあるので無効にする。
 #
 # @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Rails/SkipsModelValidations
