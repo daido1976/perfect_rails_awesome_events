@@ -189,13 +189,6 @@ Style/FormatStringToken:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-# 使うとしたら歴史的経緯から comparison スタイルな気がするけど、気にしなくても分かりやすい気がするので無効にしておく。
-#
-# @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Style/NumericPredicate
-#
-Style/NumericPredicate:
-  Enabled: false
-
 # 統一書式となるように設定しておく。
 #
 # @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Style/PercentLiteralDelimiters
