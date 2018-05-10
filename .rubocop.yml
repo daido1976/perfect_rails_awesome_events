@@ -241,15 +241,6 @@ Rails:
 
 # 現状追認。
 #
-# @see http://www.rubydoc.info/github/bbatsov/rubocop/Rubocop/Cop/Rails/ActionFilter
-#
-Rails/ActionFilter:
-  EnforcedStyle: action
-  Include:
-    - app/controllers/**/*.rb
-
-# 現状追認。
-#
 # @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Rails/Date
 #
 Rails/Date:
