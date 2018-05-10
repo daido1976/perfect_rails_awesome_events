@@ -238,8 +238,6 @@ Style/TrailingCommaInHashLiteral:
 
 Rails:
   Enabled: true
-  Exclude:
-    - 'bin/continuous_bundle_update.rb'
 
 # 現状追認。
 #
