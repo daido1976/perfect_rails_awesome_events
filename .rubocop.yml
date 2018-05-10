@@ -222,7 +222,7 @@ Style/TernaryParentheses:
 # @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Style/TrailingCommaInArguments
 #
 Style/TrailingCommaInArguments:
-  Enabled: false
+  EnforcedStyleForMultiline: consistent_comma
 
 # 現状追認。
 #
