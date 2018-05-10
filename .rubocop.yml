@@ -255,13 +255,6 @@ Rails/SkipsModelValidations:
 
 # 現状追認。
 #
-# @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Rails/TimeZone
-#
-Rails/TimeZone:
-  EnforcedStyle: flexible
-
-# 現状追認。
-#
 # @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Rails/Validation
 #
 Rails/Validation:
