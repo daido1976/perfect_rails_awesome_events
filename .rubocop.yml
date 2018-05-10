@@ -258,8 +258,7 @@ Rails/SkipsModelValidations:
 # @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Rails/Validation
 #
 Rails/Validation:
-  Include:
-    - app/models/**/*.rb
+  Enabled: false  
 
 # 現状追認。
 #
