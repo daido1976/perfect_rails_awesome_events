@@ -248,14 +248,6 @@ Rails/HasManyOrHasOneDependent:
 
 # 現状追認。
 #
-# @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Rails/ReadWriteAttribute
-#
-Rails/ReadWriteAttribute:
-  Include:
-    - app/models/**/*.rb
-
-# 現状追認。
-#
 # @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Rails/ScopeArgs
 #
 Rails/ScopeArgs:
