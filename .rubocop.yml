@@ -241,14 +241,6 @@ Rails:
 
 # 現状追認。
 #
-# @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Rails/FindEach
-#
-Rails/FindEach:
-  Include:
-    - app/models/**/*.rb
-
-# 現状追認。
-#
 # @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Rails/HasAndBelongsToMany
 #
 Rails/HasAndBelongsToMany:
