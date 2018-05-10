@@ -32,7 +32,7 @@ Lint/AssignmentInCondition:
 # @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Metrics/AbcSize
 #
 Metrics/AbcSize:
-  Max: 30
+  Max: 20
 
 # 現状追認。
 #
