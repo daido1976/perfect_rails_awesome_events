@@ -201,7 +201,7 @@ Style/RescueStandardError:
 # @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Style/SignalException
 #
 Style/SignalException:
-  EnforcedStyle: semantic
+  Enabled: false
 
 # 統一するなら brackets スタイルが修正範囲が狭そうだけど、無理に揃えなくても分かりやすいかなと思ったので無効にしておく。
 #
