@@ -226,7 +226,7 @@ Style/TrailingCommaInArguments:
 
 # 現状追認。
 #
-# @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Style/TrailingCommaInLiteral
+# @see https://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Style/TrailingCommaInArrayLiteral
 #
 Style/TrailingCommaInArrayLiteral:
   Enabled: false
