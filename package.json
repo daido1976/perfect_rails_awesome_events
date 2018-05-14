@@ -1,5 +1,7 @@
 {
   "name": "perfect_rails_awesome_events",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "bootstrap": "^4.1.1"
+  }
 }
