@@ -10,19 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_05_16_054408) do
-
+ActiveRecord::Schema.define(version: 20_180_516_054_408) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension 'plpgsql'
 
-  create_table "users", force: :cascade do |t|
-    t.string "provider", null: false
-    t.string "uid", null: false
-    t.string "nickname", null: false
-    t.string "image_url", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
+  create_table 'users', force: :cascade do |t|
+    t.string 'provider', null: false
+    t.string 'uid', null: false
+    t.string 'nickname', null: false
+    t.string 'image_url', null: false
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index %w[provider uid], name: 'index_users_on_provider_and_uid', unique: true
   end
-
 end
