@@ -1,0 +1,3 @@
+# {...}の部分をご自身のTwitter API Keysに書き換え、ファイル名を.envrcに変更してください。
+export TWITTER_API_KEY={your_twitter_api_key}
+export TWITTER_API_SECRET={your_twitter_api_secret}
