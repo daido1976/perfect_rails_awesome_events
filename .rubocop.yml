@@ -83,6 +83,12 @@ Metrics/MethodLength:
   CountComments: false
   Max: 20
 
+# @see https://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Metrics/BlockLength
+#
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+
 # 現状追認。
 #
 # @see http://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Metrics/ParameterLists
