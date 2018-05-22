@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe SessionsController, type: :request do
   describe '#create' do
+    subject { get '/auth/twitter/callback' }
+
     before do
       OmniAuth.config.test_mode = true
       OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new(
@@ -17,35 +19,35 @@ RSpec.describe SessionsController, type: :request do
     context 'ユーザが未登録の場合' do
       it 'ユーザを新規作成すること' do
         get '/auth/twitter'
-        expect { get '/auth/twitter/callback' }.to change { User.all.count }.by(1)
+        expect { subject }.to change { User.all.count }.by(1)
       end
 
       it 'sessionにIDが保存されていること' do
-        get '/auth/twitter/callback'
+        subject
         expect(session[:user_id]).to be_present
       end
 
       it 'ログイン後トップページにリダイレクトすること' do
-        get '/auth/twitter/callback'
+        subject
         expect(response).to redirect_to root_path
       end
     end
 
     context 'ユーザが登録済みの場合' do
-      before { get '/auth/twitter/callback' }
+      before { subject }
 
       it '新しいユーザが作成されないこと' do
         get '/auth/twitter'
-        expect { get '/auth/twitter/callback' }.not_to change { User.all.count }
+        expect { subject }.not_to change { User.all.count }
       end
 
       it 'sessionにIDが保存されていること' do
-        get '/auth/twitter/callback'
+        subject
         expect(session[:user_id]).to be_present
       end
 
       it 'ログイン後トップページにリダイレクトすること' do
-        get '/auth/twitter/callback'
+        subject
         expect(response).to redirect_to root_path
       end
     end
