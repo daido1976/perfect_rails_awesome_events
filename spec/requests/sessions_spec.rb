@@ -14,7 +14,7 @@ RSpec.describe SessionsController, type: :request do
       )
     end
 
-    context 'ユーザがDBに存在していない場合' do
+    context 'ユーザが未登録の場合' do
       it 'ユーザを新規作成すること' do
         get '/auth/twitter'
         expect { get '/auth/twitter/callback' }.to change { User.all.count }.by(1)
@@ -31,7 +31,7 @@ RSpec.describe SessionsController, type: :request do
       end
     end
 
-    context 'ユーザがDBにすでに存在している場合' do
+    context 'ユーザが登録済みの場合' do
       before { get '/auth/twitter/callback' }
 
       it '新しいユーザが作成されないこと' do
@@ -43,7 +43,7 @@ RSpec.describe SessionsController, type: :request do
         get '/auth/twitter/callback'
         expect(session[:user_id]).to be_present
       end
-      
+
       it 'ログイン後トップページにリダイレクトすること' do
         get '/auth/twitter/callback'
         expect(response).to redirect_to root_path
