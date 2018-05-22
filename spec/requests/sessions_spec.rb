@@ -5,7 +5,6 @@ RSpec.describe SessionsController, type: :request do
     subject { get '/auth/twitter/callback' }
 
     before do
-      OmniAuth.config.test_mode = true
       OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new(
         provider: 'twitter',
         uid: '1234567890',
