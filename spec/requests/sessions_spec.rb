@@ -8,7 +8,7 @@ RSpec.describe SessionsController, type: :request do
       OmniAuth.config.test_mode = true
       OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new(
         provider: 'twitter',
-        uid: '12354567890',
+        uid: '1234567890',
         info: {
           nickname: 'hogehoge',
           image: 'http://image.example.com',
@@ -34,7 +34,7 @@ RSpec.describe SessionsController, type: :request do
     end
 
     context 'ユーザが登録済みの場合' do
-      before { subject }
+      before { create(:user, provider: 'twitter', uid: '1234567890') }
 
       it '新しいユーザが作成されないこと' do
         get '/auth/twitter'
