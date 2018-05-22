@@ -19,7 +19,7 @@ RSpec.describe SessionsController, type: :request do
     context 'ユーザが未登録の場合' do
       it 'ユーザを新規作成すること' do
         get '/auth/twitter'
-        expect { subject }.to change { User.all.count }.by(1)
+        expect { subject }.to change { User.count }.by(1)
       end
 
       it 'sessionにIDが保存されていること' do
@@ -38,7 +38,7 @@ RSpec.describe SessionsController, type: :request do
 
       it '新しいユーザが作成されないこと' do
         get '/auth/twitter'
-        expect { subject }.not_to change { User.all.count }
+        expect { subject }.not_to change { User.count }
       end
 
       it 'sessionにIDが保存されていること' do
