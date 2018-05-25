@@ -55,12 +55,4 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
   OmniAuth.config.test_mode = true
-  OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new(
-    provider: 'twitter',
-    uid: '1234567890',
-    info: {
-      nickname: 'hogehoge',
-      image: 'http://image.example.com',
-    },
-  )
 end
