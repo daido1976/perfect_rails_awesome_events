@@ -22,7 +22,11 @@
         </button>
         <div class='collapse navbar-collapse justify-content-end' id='bs-example-navbar-collapse-1'>
           <ul class='navbar-nav'>
-            <li class='nav-item'><%= link_to 'Twitterでログイン', '/auth/twitter', class: 'nav-link' %></li>
+            <% if logged_in? %>
+              <li class='nav-item'><%= link_to 'ログアウト', logout_path, class: 'nav-link' %></li>
+            <% else %>
+              <li class='nav-item'><%= link_to 'Twitterでログイン', '/auth/twitter', class: 'nav-link' %></li>
+            <% end %>
           </ul>
         </div>
       </div>
