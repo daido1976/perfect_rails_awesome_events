@@ -265,3 +265,10 @@ Rails/SkipsModelValidations:
 #
 Rails/Validation:
   Enabled: false
+
+# Rails4.1 以降ではデフォルトで inverse_of が設定されているため無効にする。
+#
+# @see https://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Rails/InverseOf
+#
+Rails/InverseOf:
+  Enabled: false
