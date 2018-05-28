@@ -23,6 +23,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'pry-doc'
   gem 'pry-rails'
+  gem 'rails-controller-testing'
   gem 'rspec-rails'
   gem 'rubocop'
   gem 'shoulda-matchers'
