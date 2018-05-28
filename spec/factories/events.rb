@@ -1,10 +1,10 @@
 FactoryBot.define do
   factory :event do
-    owner_id 1
-    name 'MyString'
-    place 'MyString'
-    start_time '2018-05-25 14:47:58'
-    end_time '2018-05-25 14:47:58'
-    content 'MyText'
+    owner
+    sequence(:name) { |i| "イベント名#{i}" }
+    sequence(:place) { |i| "イベント開催場所#{i}" }
+    sequence(:content) { |i| "イベント内容#{i}" }
+    start_time { rand(1..30).days.from_now }
+    end_time { start_time + rand(1..30).hours }
   end
 end
