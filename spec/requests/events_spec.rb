@@ -45,7 +45,7 @@ RSpec.describe EventsController, type: :request do
     context '正しい値が入力された場合' do
       let(:event_params) { { event: attributes_for(:event) } }
 
-      it 'イベントが新規作成される' do
+      it 'イベントが新規作成されること' do
         expect { subject }.to change { Event.count }.by(1)
       end
 
