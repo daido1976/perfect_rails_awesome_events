@@ -266,7 +266,7 @@ Rails/SkipsModelValidations:
 Rails/Validation:
   Enabled: false
 
-# Rails4.1 以降ではデフォルトで inverse_of が設定されているため無効にする。
+# 双方向の関連付けを明示する inverse_of はアプリの仕様によって要否が変わるので、無効にしておく。
 #
 # @see https://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Rails/InverseOf
 #
