@@ -36,9 +36,8 @@ RSpec.describe Event, type: :model do
     context 'end_time が start_time より前の場合' do
       let(:invalid_event) { build(:event, start_time: Time.zone.now, end_time: Time.zone.now - 1.hour) }
 
-      it 'event が無効でありエラーが発生すること' do
+      it 'event が無効であること' do
         expect(invalid_event).to be_invalid
-        expect(invalid_event.errors[:end_time]).to be_present
       end
     end
   end
