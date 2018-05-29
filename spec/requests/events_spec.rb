@@ -43,9 +43,7 @@ RSpec.describe EventsController, type: :request do
     before { get '/auth/twitter/callback' }
 
     context '正しい値が入力された場合' do
-      let(:event_params) do
-        { event: attributes_for(:event) }
-      end
+      let(:event_params) { { event: attributes_for(:event) } }
 
       it 'イベントが新規作成される' do
         expect { subject }.to change { Event.count }.by(1)
@@ -59,9 +57,7 @@ RSpec.describe EventsController, type: :request do
     end
 
     context '正しい値が入力されなかった場合' do
-      let(:event_params) do
-        { event: attributes_for(:event).merge(name: '') }
-      end
+      let(:event_params) { { event: attributes_for(:event).merge(name: '') } }
 
       it 'イベントが作成されないこと' do
         expect { subject }.not_to change { Event.count }
