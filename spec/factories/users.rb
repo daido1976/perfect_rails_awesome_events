@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :user, aliases: [:owner] do
     provider 'twitter'
-    uid '1234567890'
-    nickname 'hogehoge'
-    image_url 'http://image.example.com'
+    sequence(:uid) { |i| "uid#{i}" }
+    sequence(:nickname) { |i| "nickname#{i}" }
+    sequence(:image_url) { |i| "http://example.com/image#{i}.jpg" }
   end
 end
