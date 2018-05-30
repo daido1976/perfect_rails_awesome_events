@@ -266,9 +266,10 @@ Rails/SkipsModelValidations:
 Rails/Validation:
   Enabled: false
 
-# 双方向の関連付けを明示する inverse_of はアプリの仕様によって要否が変わるので、無効にしておく。
+# 双方向の関連付けを明示する inverse_of は:throughオプション、:polymorphicオプション、:asオプションとの併用ができないため、アプリの仕様によってつけるかどうかを選択できるよう無効にしておく。
 #
 # @see https://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Rails/InverseOf
+# @see https://railsguides.jp/association_basics.html#%E5%8F%8C%E6%96%B9%E5%90%91%E9%96%A2%E9%80%A3%E4%BB%98%E3%81%91
 #
 Rails/InverseOf:
   Enabled: false
