@@ -69,4 +69,37 @@ RSpec.describe EventsController, type: :request do
       end
     end
   end
+
+  describe '#show' do
+    let(:event_id) { Event.last.id }
+
+    shared_examples 'イベント詳細ページが表示されること' do
+      it { expect(response).to render_template('show') }
+    end
+
+    shared_examples '@event に該当するイベントが格納されていること' do
+      it { expect(assigns(:event)).to eq Event.find(event_id) }
+    end
+
+    context 'ログイン済みのユーザがアクセスした場合' do
+      before do
+        get '/auth/twitter/callback'
+        create(:event)
+        get "/events/#{event_id}"
+      end
+
+      it_behaves_like 'イベント詳細ページが表示されること'
+      it_behaves_like '@event に該当するイベントが格納されていること'
+    end
+
+    context '未ログインのユーザがアクセスした場合' do
+      before do
+        create(:event)
+        get "/events/#{event_id}"
+      end
+
+      it_behaves_like 'イベント詳細ページが表示されること'
+      it_behaves_like '@event に該当するイベントが格納されていること'
+    end
+  end
 end
