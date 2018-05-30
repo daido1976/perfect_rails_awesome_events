@@ -12,7 +12,7 @@ RSpec.describe EventsController, type: :request do
     )
   end
 
-  describe '#new' do
+  describe 'GET #new' do
     subject { get '/events/new' }
 
     context 'ログイン済みのユーザがアクセスした場合' do
@@ -37,7 +37,7 @@ RSpec.describe EventsController, type: :request do
     end
   end
 
-  describe '#create' do
+  describe 'POST #create' do
     subject { post '/events', params: event_params }
 
     before { get '/auth/twitter/callback' }
@@ -70,7 +70,7 @@ RSpec.describe EventsController, type: :request do
     end
   end
 
-  describe '#show' do
+  describe 'GET #show' do
     let(:event_id) { Event.last.id }
 
     shared_examples 'イベント詳細ページが表示されること' do
