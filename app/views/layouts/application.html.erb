@@ -22,6 +22,7 @@
         </button>
         <div class='collapse navbar-collapse justify-content-end' id='bs-example-navbar-collapse-1'>
           <ul class='navbar-nav'>
+            <li class='nav-item'><%= link_to 'イベントを作る', new_event_path, class: 'nav-link' %></li>
             <% if logged_in? %>
               <li class='nav-item'><%= link_to 'ログアウト', logout_path, class: 'nav-link' %></li>
             <% else %>
@@ -35,6 +36,11 @@
       <% if flash[:notice] %>
         <div class='alert alert-success'>
           <%= flash[:notice] %>
+        </div>
+      <% end %>
+      <% if flash[:alert] %>
+        <div class='alert alert-danger'>
+          <%= flash[:alert] %>
         </div>
       <% end %>
       <%= yield %>

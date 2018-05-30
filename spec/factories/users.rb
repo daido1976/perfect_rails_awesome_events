@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :user do
+  factory :user, aliases: [:owner] do
     provider 'twitter'
     uid '1234567890'
     nickname 'hogehoge'
