@@ -63,4 +63,8 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
   config.order = 'random'
   OmniAuth.config.test_mode = true
+
+  config.before(:each) do |example|
+    driven_by :selenium_chrome_headless, screen_size: [1400, 1400] if example.metadata[:type] == :system
+  end
 end
