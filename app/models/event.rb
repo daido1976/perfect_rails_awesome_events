@@ -8,6 +8,11 @@ class Event < ApplicationRecord
   validates :end_time, presence: true
   validate :end_time_should_be_after_start_time
 
+  def created_by?(user)
+    return false unless user
+    owner_id == user.id
+  end
+
   private
 
   def end_time_should_be_after_start_time
