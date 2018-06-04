@@ -2,38 +2,48 @@
   <%= @event.name %>
 </div>
 
-<div class='card mt-3'>
-  <div class='card-header'>
-    主催者
+<div class='row'>
+  <div class='col-lg-8'>
+    <div class='card mt-3'>
+      <div class='card-header'>
+        主催者
+      </div>
+      <div class="card-body">
+        <%= link_to("https://twitter.com/#{@event.owner.nickname}", class: 'card-link text-dark') do %>
+        <%= image_tag @event.owner.image_url %>
+        <%= "@#{@event.owner.nickname}" %>
+        <% end %>
+      </div>
+    </div>
+    <div class='card mt-3'>
+      <div class='card-header'>
+        開催時間
+      </div>
+      <div class="card-body">
+        <%= l @event.start_time, format: :full_date %> - <%= l @event.end_time, format: :full_date %>
+      </div>
+    </div>
+    <div class='card mt-3'>
+      <div class='card-header'>
+        開催場所
+      </div>
+      <div class="card-body">
+        <%= @event.place %>
+      </div>
+    </div>
+    <div class='card mt-3'>
+      <div class='card-header'>
+        イベント内容
+      </div>
+      <div class="card-body">
+        <%= @event.content %>
+      </div>
+    </div>
   </div>
-  <div class="card-body">
-    <%= link_to("https://twitter.com/#{@event.owner.nickname}", class: 'card-link text-dark') do %>
-      <%= image_tag @event.owner.image_url %>
-      <%= "@#{@event.owner.nickname}" %>
+
+  <div class='col-lg-4 mt-3'>
+    <% if @event.created_by?(current_user) %>
+      <%= link_to 'イベントを編集する', edit_event_path(@event), class: 'btn btn-info btn-lg btn-block' %>
     <% end %>
-  </div>
-</div>
-<div class='card mt-3'>
-  <div class='card-header'>
-    開催時間
-  </div>
-  <div class="card-body">
-      <%= l @event.start_time, format: :full_date %> - <%= l @event.end_time, format: :full_date %>
-  </div>
-</div>
-<div class='card mt-3'>
-  <div class='card-header'>
-    開催場所
-  </div>
-  <div class="card-body">
-      <%= @event.place %>
-  </div>
-</div>
-<div class='card mt-3'>
-  <div class='card-header'>
-    イベント内容
-  </div>
-  <div class="card-body">
-      <%= @event.content %>
   </div>
 </div>
