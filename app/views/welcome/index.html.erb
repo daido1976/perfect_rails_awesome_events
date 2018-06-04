@@ -1,2 +1,15 @@
-<h1>Welcome#index</h1>
-<p>Find me in app/views/welcome/index.html.erb</p>
+<div class='h1'>
+  イベント一覧
+</div>
+<div class='list-group mt-3'>
+  <% @events.each do |event| %>
+    <%= link_to(event, class: 'list-group-item list-group-item-action') do %>
+      <div class='h4 mt-2'>
+        <%= event.name %>
+      </div>
+      <div class='mb-2'>
+        <%= l event.start_time, format: :full_date %> - <%= l event.end_time, format: :full_date %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

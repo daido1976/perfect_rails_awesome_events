@@ -19,6 +19,7 @@ gem 'uglifier', '>= 1.3.0'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'capybara'
   gem 'factory_bot_rails'
   gem 'pry-byebug'
   gem 'pry-doc'
@@ -26,6 +27,7 @@ group :development, :test do
   gem 'rails-controller-testing'
   gem 'rspec-rails'
   gem 'rubocop'
+  gem 'selenium-webdriver'
   gem 'shoulda-matchers'
 end
 
