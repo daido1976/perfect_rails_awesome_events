@@ -72,19 +72,26 @@ RSpec.describe EventsController, type: :request do
   end
 
   describe 'GET #show' do
+    subject { get "/events/#{event_id}" }
+
     shared_examples 'イベント詳細ページが表示されること' do
-      it { expect(response).to render_template('show') }
+      it do
+        subject
+        expect(response).to render_template('show')
+      end
     end
 
     shared_examples '@event に該当するイベントが格納されていること' do
-      it { expect(assigns(:event)).to eq Event.find(event_id) }
+      it do
+        subject
+        expect(assigns(:event)).to eq Event.find(event_id)
+      end
     end
 
     context 'ログイン済みのユーザがアクセスした場合' do
       before do
         get '/auth/twitter/callback'
         create(:event)
-        get "/events/#{event_id}"
       end
 
       it_behaves_like 'イベント詳細ページが表示されること'
@@ -94,7 +101,6 @@ RSpec.describe EventsController, type: :request do
     context '未ログインのユーザがアクセスした場合' do
       before do
         create(:event)
-        get "/events/#{event_id}"
       end
 
       it_behaves_like 'イベント詳細ページが表示されること'
