@@ -12,6 +12,8 @@ RSpec.describe EventsController, type: :request do
     )
   end
 
+  let(:event_id) { Event.last.id }
+
   describe 'GET #new' do
     subject { get '/events/new' }
 
@@ -51,7 +53,6 @@ RSpec.describe EventsController, type: :request do
 
       it 'events/:id にリダイレクトされること' do
         subject
-        event_id = Event.last.id
         expect(response).to redirect_to("/events/#{event_id}")
       end
     end
@@ -71,8 +72,6 @@ RSpec.describe EventsController, type: :request do
   end
 
   describe 'GET #show' do
-    let(:event_id) { Event.last.id }
-
     shared_examples 'イベント詳細ページが表示されること' do
       it { expect(response).to render_template('show') }
     end
@@ -105,8 +104,6 @@ RSpec.describe EventsController, type: :request do
 
   describe 'GET #edit' do
     subject { get "/events/#{event_id}/edit" }
-
-    let(:event_id) { Event.last.id }
 
     context 'ログイン済みのユーザがアクセスした場合' do
       before { get '/auth/twitter/callback' }
@@ -159,8 +156,6 @@ RSpec.describe EventsController, type: :request do
       create(:event, owner_id: User.last.id, content: 'content')
     end
 
-    let(:event_id) { Event.last.id }
-
     context '正しい値が入力された場合' do
       let(:event_params) { { event: attributes_for(:event, content: 'updated_content') } }
 
@@ -195,8 +190,6 @@ RSpec.describe EventsController, type: :request do
       get '/auth/twitter/callback'
       create(:event, owner_id: User.last.id)
     end
-
-    let(:event_id) { Event.last.id }
 
     it 'イベントを削除すること' do
       expect { subject }.to change { Event.count }.by(-1)
