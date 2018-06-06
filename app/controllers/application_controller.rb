@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::Base
   helper_method :current_user, :logged_in?
 
+  rescue_from ActiveRecord::RecordNotFound, with: :error404
+
   private
 
   def current_user
@@ -15,5 +17,9 @@ class ApplicationController < ActionController::Base
   def authenticate
     return if logged_in?
     redirect_to root_path, alert: 'ログインしてください'
+  end
+
+  def error404(_e)
+    render 'error404', status: :not_found, formats: [:html]
   end
 end
