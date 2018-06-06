@@ -41,4 +41,26 @@ RSpec.describe Event, type: :model do
       end
     end
   end
+
+  describe '#created_by?' do
+    subject { event.created_by?(user) }
+
+    context 'イベントを作ったユーザである場合' do
+      let(:user) { create(:user) }
+      let(:event) { create(:event, owner_id: user.id) }
+
+      it 'true を返す' do
+        expect(subject).to eq true
+      end
+    end
+
+    context 'イベントを作ったユーザでない場合' do
+      let(:user) { create(:user) }
+      let(:event) { create(:event) }
+
+      it 'false を返す' do
+        expect(subject).to eq false
+      end
+    end
+  end
 end
