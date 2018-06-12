@@ -42,46 +42,77 @@ RSpec.describe EventsController, type: :request do
       before { get '/auth/twitter/callback' }
 
       context '正しい値が入力された場合' do
-        let(:event_params) { { event: attributes_for(:event) } }
+        let(:params) do
+          {
+            event: {
+              name: 'event_name',
+              place: 'event_place',
+              content: 'event_content',
+              start_time: rand(1..15).days.from_now,
+              end_time: rand(15..30).days.from_now,
+            },
+          }
+        end
 
         it 'イベントが新規作成されること' do
-          expect { post '/events', params: event_params }.to change { Event.count }.by(1)
+          expect { post '/events', params: params }.to change { Event.count }.by(1)
         end
 
         it 'events/:id にリダイレクトされること' do
-          post '/events', params: event_params
+          post '/events', params: params
           expect(response).to redirect_to("/events/#{event_id}")
         end
       end
 
       context '正しい値が入力されなかった場合' do
-        let(:event_params) { { event: attributes_for(:event).merge(name: '') } }
+        # name が入力されていない
+        let(:params) do
+          {
+            event: {
+              name: '',
+              place: 'event_place',
+              content: 'event_content',
+              start_time: rand(1..15).days.from_now,
+              end_time: rand(15..30).days.from_now,
+            },
+          }
+        end
 
         it 'イベントが作成されないこと' do
-          expect { post '/events', params: event_params }.not_to change { Event.count }
+          expect { post '/events', params: params }.not_to change { Event.count }
         end
 
         it 'イベント作成ページが再度表示されること' do
-          post '/events', params: event_params
+          post '/events', params: params
           expect(response).to render_template('new')
         end
       end
     end
 
     context '未ログインのユーザが POST した場合' do
-      let(:event_params) { { event: attributes_for(:event) } }
+      let(:params) do
+        {
+          event: {
+            name: 'event_name',
+            place: 'event_place',
+            content: 'event_content',
+            start_time: rand(1..15).hours.from_now,
+            end_time: rand(15..30).hours.from_now,
+          },
+        }
+      end
 
       it 'イベントが作成されないこと' do
-        expect { post '/events', params: event_params }.not_to change { Event.count }
+        expect { post '/events', params: params }.not_to change { Event.count }
       end
 
       it 'トップページへリダイレクトされること' do
-        post '/events', params: event_params
+        post '/events', params: params
         expect(response).to redirect_to root_path
       end
 
       it 'アラートが表示されること' do
-        post '/events', params: event_params
+        post '/events', params: params
         expect(flash[:alert]).to be_present
       end
     end
@@ -160,52 +191,83 @@ RSpec.describe EventsController, type: :request do
     context 'ログイン済みのユーザが PATCH した場合' do
       before do
         get '/auth/twitter/callback'
-        create(:event, owner_id: User.last.id, content: 'content')
+        create(:event, owner_id: User.last.id, content: 'event_content')
       end
 
       context '正しい値が入力された場合' do
-        let(:event_params) { { event: attributes_for(:event, content: 'updated_content') } }
+        let(:params) do
+          {
+            event: {
+              name: 'event_name',
+              place: 'event_place',
+              content: 'updated_content',
+              start_time: rand(1..15).hours.from_now,
+              end_time: rand(15..30).hours.from_now,
+            },
+          }
+        end
 
         it 'イベント情報が更新されること' do
-          expect { patch "/events/#{event_id}", params: event_params }.to change { Event.find(event_id).content }.from('content').to('updated_content')
+          expect { patch "/events/#{event_id}", params: params }.to change { Event.find(event_id).content }.from('event_content').to('updated_content')
         end
 
         it 'events/:id にリダイレクトされること' do
-          patch "/events/#{event_id}", params: event_params
+          patch "/events/#{event_id}", params: params
           expect(response).to redirect_to("/events/#{event_id}")
         end
       end
 
       context '正しい値が入力されなかった場合' do
-        let(:event_params) { { event: attributes_for(:event, content: 'updated_content').merge(name: '') } }
+        # name が入力されていない
+        let(:params) do
+          {
+            event: {
+              name: '',
+              place: 'event_place',
+              content: 'updated_content',
+              start_time: rand(1..15).days.from_now,
+              end_time: rand(15..30).days.from_now,
+            },
+          }
+        end
 
         it 'イベント情報が更新されないこと' do
-          expect { patch "/events/#{event_id}", params: event_params }.not_to change { Event.find(event_id).content }
+          expect { patch "/events/#{event_id}", params: params }.not_to change { Event.find(event_id).content }
         end
 
         it 'イベント編集ページが再度表示されること' do
-          patch "/events/#{event_id}", params: event_params
+          patch "/events/#{event_id}", params: params
           expect(response).to render_template('edit')
         end
       end
     end
 
     context '未ログインのユーザが PATCH した場合' do
-      before { create(:event, content: 'content') }
+      before { create(:event, content: 'event_content') }
 
-      let(:event_params) { { event: attributes_for(:event, content: 'updated_content') } }
+      let(:params) do
+        {
+          event: {
+            name: 'event_name',
+            place: 'event_place',
+            content: 'updated_content',
+            start_time: rand(1..15).hours.from_now,
+            end_time: rand(15..30).hours.from_now,
+          },
+        }
+      end
 
       it 'イベント情報が更新されないこと' do
-        expect { patch "/events/#{event_id}", params: event_params }.not_to change { Event.find(event_id).content }
+        expect { patch "/events/#{event_id}", params: params }.not_to change { Event.find(event_id).content }
       end
 
       it 'トップページへリダイレクトされること' do
-        patch "/events/#{event_id}", params: event_params
+        patch "/events/#{event_id}", params: params
         expect(response).to redirect_to root_path
       end
 
       it 'アラートが表示されること' do
-        patch "/events/#{event_id}", params: event_params
+        patch "/events/#{event_id}", params: params
         expect(flash[:alert]).to be_present
       end
     end
