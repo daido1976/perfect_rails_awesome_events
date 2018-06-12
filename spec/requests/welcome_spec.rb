@@ -12,9 +12,5 @@ RSpec.describe 'Welcome', type: :request do
     it 'インデックスページが表示されること' do
       expect(response).to render_template 'index'
     end
-
-    it '@events に未開催のイベント一覧が格納されていること' do
-      expect(assigns(:events).count).to eq 2
-    end
   end
 end

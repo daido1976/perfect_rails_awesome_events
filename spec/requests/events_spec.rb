@@ -101,13 +101,6 @@ RSpec.describe EventsController, type: :request do
       end
     end
 
-    shared_examples '@event に該当するイベントが格納されていること' do
-      it do
-        subject
-        expect(assigns(:event)).to eq Event.find(event_id)
-      end
-    end
-
     context 'ログイン済みのユーザがアクセスした場合' do
       before do
         get '/auth/twitter/callback'
@@ -115,7 +108,6 @@ RSpec.describe EventsController, type: :request do
       end
 
       it_behaves_like 'イベント詳細ページが表示されること'
-      it_behaves_like '@event に該当するイベントが格納されていること'
     end
 
     context '未ログインのユーザがアクセスした場合' do
@@ -124,7 +116,6 @@ RSpec.describe EventsController, type: :request do
       end
 
       it_behaves_like 'イベント詳細ページが表示されること'
-      it_behaves_like '@event に該当するイベントが格納されていること'
     end
   end
 
