@@ -15,33 +15,29 @@ RSpec.describe EventsController, type: :request do
   let(:event_id) { Event.last.id }
 
   describe 'GET #new' do
-    subject { get '/events/new' }
-
     context 'ログイン済みのユーザがアクセスした場合' do
       before { get '/auth/twitter/callback' }
 
       it 'イベント作成ページが表示されること' do
-        subject
+        get '/events/new'
         expect(response).to render_template('new')
       end
     end
 
     context '未ログインのユーザがアクセスした場合' do
       it 'トップページへリダイレクトされること' do
-        subject
+        get '/events/new'
         expect(response).to redirect_to root_path
       end
 
       it 'アラートが表示されること' do
-        subject
+        get '/events/new'
         expect(flash[:alert]).to be_present
       end
     end
   end
 
   describe 'POST #create' do
-    subject { post '/events', params: event_params }
-
     context 'ログイン済みのユーザが POST した場合' do
       before { get '/auth/twitter/callback' }
 
@@ -49,11 +45,11 @@ RSpec.describe EventsController, type: :request do
         let(:event_params) { { event: attributes_for(:event) } }
 
         it 'イベントが新規作成されること' do
-          expect { subject }.to change { Event.count }.by(1)
+          expect { post '/events', params: event_params }.to change { Event.count }.by(1)
         end
 
         it 'events/:id にリダイレクトされること' do
-          subject
+          post '/events', params: event_params
           expect(response).to redirect_to("/events/#{event_id}")
         end
       end
@@ -62,11 +58,11 @@ RSpec.describe EventsController, type: :request do
         let(:event_params) { { event: attributes_for(:event).merge(name: '') } }
 
         it 'イベントが作成されないこと' do
-          expect { subject }.not_to change { Event.count }
+          expect { post '/events', params: event_params }.not_to change { Event.count }
         end
 
         it 'イベント作成ページが再度表示されること' do
-          subject
+          post '/events', params: event_params
           expect(response).to render_template('new')
         end
       end
@@ -76,27 +72,25 @@ RSpec.describe EventsController, type: :request do
       let(:event_params) { { event: attributes_for(:event) } }
 
       it 'イベントが作成されないこと' do
-        expect { subject }.not_to change { Event.count }
+        expect { post '/events', params: event_params }.not_to change { Event.count }
       end
 
       it 'トップページへリダイレクトされること' do
-        subject
+        post '/events', params: event_params
         expect(response).to redirect_to root_path
       end
 
       it 'アラートが表示されること' do
-        subject
+        post '/events', params: event_params
         expect(flash[:alert]).to be_present
       end
     end
   end
 
   describe 'GET #show' do
-    subject { get "/events/#{event_id}" }
-
     shared_examples 'イベント詳細ページが表示されること' do
       it do
-        subject
+        get "/events/#{event_id}"
         expect(response).to render_template('show')
       end
     end
@@ -120,8 +114,6 @@ RSpec.describe EventsController, type: :request do
   end
 
   describe 'GET #edit' do
-    subject { get "/events/#{event_id}/edit" }
-
     context 'ログイン済みのユーザがアクセスした場合' do
       before { get '/auth/twitter/callback' }
 
@@ -131,7 +123,7 @@ RSpec.describe EventsController, type: :request do
         end
 
         it 'イベント編集ページが表示されること' do
-          subject
+          get "/events/#{event_id}/edit"
           expect(response).to render_template('edit')
         end
       end
@@ -142,7 +134,7 @@ RSpec.describe EventsController, type: :request do
         end
 
         it 'error404 のページが表示されること' do
-          subject
+          get "/events/#{event_id}/edit"
           expect(response).to render_template('error404')
         end
       end
@@ -154,20 +146,18 @@ RSpec.describe EventsController, type: :request do
       end
 
       it 'トップページへリダイレクトされること' do
-        subject
+        get "/events/#{event_id}/edit"
         expect(response).to redirect_to root_path
       end
 
       it 'アラートが表示されること' do
-        subject
+        get "/events/#{event_id}/edit"
         expect(flash[:alert]).to be_present
       end
     end
   end
 
   describe 'PATCH #update' do
-    subject { patch "/events/#{event_id}", params: event_params }
-
     context 'ログイン済みのユーザが PATCH した場合' do
       before do
         get '/auth/twitter/callback'
@@ -178,11 +168,11 @@ RSpec.describe EventsController, type: :request do
         let(:event_params) { { event: attributes_for(:event, content: 'updated_content') } }
 
         it 'イベント情報が更新されること' do
-          expect { subject }.to change { Event.find(event_id).content }.from('content').to('updated_content')
+          expect { patch "/events/#{event_id}", params: event_params }.to change { Event.find(event_id).content }.from('content').to('updated_content')
         end
 
         it 'events/:id にリダイレクトされること' do
-          subject
+          patch "/events/#{event_id}", params: event_params
           expect(response).to redirect_to("/events/#{event_id}")
         end
       end
@@ -191,11 +181,11 @@ RSpec.describe EventsController, type: :request do
         let(:event_params) { { event: attributes_for(:event, content: 'updated_content').merge(name: '') } }
 
         it 'イベント情報が更新されないこと' do
-          expect { subject }.not_to change { Event.find(event_id).content }
+          expect { patch "/events/#{event_id}", params: event_params }.not_to change { Event.find(event_id).content }
         end
 
         it 'イベント編集ページが再度表示されること' do
-          subject
+          patch "/events/#{event_id}", params: event_params
           expect(response).to render_template('edit')
         end
       end
@@ -207,24 +197,22 @@ RSpec.describe EventsController, type: :request do
       let(:event_params) { { event: attributes_for(:event, content: 'updated_content') } }
 
       it 'イベント情報が更新されないこと' do
-        expect { subject }.not_to change { Event.find(event_id).content }
+        expect { patch "/events/#{event_id}", params: event_params }.not_to change { Event.find(event_id).content }
       end
 
       it 'トップページへリダイレクトされること' do
-        subject
+        patch "/events/#{event_id}", params: event_params
         expect(response).to redirect_to root_path
       end
 
       it 'アラートが表示されること' do
-        subject
+        patch "/events/#{event_id}", params: event_params
         expect(flash[:alert]).to be_present
       end
     end
   end
 
   describe 'DELETE #destroy' do
-    subject { delete "/events/#{event_id}" }
-
     context 'ログイン済みのユーザが DELETE した場合' do
       before do
         get '/auth/twitter/callback'
@@ -232,11 +220,11 @@ RSpec.describe EventsController, type: :request do
       end
 
       it 'イベントを削除すること' do
-        expect { subject }.to change { Event.count }.by(-1)
+        expect { delete "/events/#{event_id}" }.to change { Event.count }.by(-1)
       end
 
       it 'トップページへリダイレクトされること' do
-        subject
+        delete "/events/#{event_id}"
         expect(response).to redirect_to root_path
       end
     end
@@ -245,16 +233,16 @@ RSpec.describe EventsController, type: :request do
       before { create(:event) }
 
       it 'イベントが削除されないこと' do
-        expect { subject }.not_to change { Event.count }
+        expect { delete "/events/#{event_id}" }.not_to change { Event.count }
       end
 
       it 'トップページへリダイレクトされること' do
-        subject
+        delete "/events/#{event_id}"
         expect(response).to redirect_to root_path
       end
 
       it 'アラートが表示されること' do
-        subject
+        delete "/events/#{event_id}"
         expect(flash[:alert]).to be_present
       end
     end
