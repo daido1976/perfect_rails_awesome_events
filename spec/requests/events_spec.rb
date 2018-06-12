@@ -88,20 +88,16 @@ RSpec.describe EventsController, type: :request do
   end
 
   describe 'GET #show' do
-    shared_examples 'イベント詳細ページが表示されること' do
-      it do
-        get "/events/#{event_id}"
-        expect(response).to render_template('show')
-      end
-    end
-
     context 'ログイン済みのユーザがアクセスした場合' do
       before do
         get '/auth/twitter/callback'
         create(:event)
       end
 
-      it_behaves_like 'イベント詳細ページが表示されること'
+      it 'イベント詳細ページが表示されること' do
+        get "/events/#{event_id}"
+        expect(response).to render_template('show')
+      end
     end
 
     context '未ログインのユーザがアクセスした場合' do
@@ -109,7 +105,10 @@ RSpec.describe EventsController, type: :request do
         create(:event)
       end
 
-      it_behaves_like 'イベント詳細ページが表示されること'
+      it 'イベント詳細ページが表示されること' do
+        get "/events/#{event_id}"
+        expect(response).to render_template('show')
+      end
     end
   end
 
