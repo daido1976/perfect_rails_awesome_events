@@ -19,7 +19,8 @@ class ApplicationController < ActionController::Base
     redirect_to root_path, alert: 'ログインしてください'
   end
 
-  def error404(_e)
+  def error404(e)
+    logger.error [e, *e.backtrace].join("\n")
     render 'error404', status: :not_found, formats: [:html]
   end
 end
