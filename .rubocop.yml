@@ -74,6 +74,9 @@ Metrics/LineLength:
   URISchemes:
     - http
     - https
+  Exclude:
+    - 'spec/**/*'
+
 
 # 現状追認。
 #
