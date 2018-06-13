@@ -63,7 +63,7 @@ RSpec.describe 'Events', type: :system do
       before { visit '/auth/twitter' }
 
       context 'ユーザが当該イベントのオーナーだった場合' do
-        before { create(:event, owner_id: User.last.id) }
+        before { FactoryBot.create(:event, owner_id: User.last.id) }
 
         it '編集が完了すること' do
           # イベント詳細画面にアクセスする
@@ -97,7 +97,7 @@ RSpec.describe 'Events', type: :system do
       end
 
       context 'ユーザが当該イベントのオーナーでなかった場合' do
-        before { create(:event) }
+        before { FactoryBot.create(:event) }
 
         it '編集画面にアクセスすると、error404 のページが表示されること' do
           # URL 上でパスを指定し、アクセスする
@@ -108,7 +108,7 @@ RSpec.describe 'Events', type: :system do
     end
 
     context '未ログインユーザの場合' do
-      before { create(:event) }
+      before { FactoryBot.create(:event) }
 
       it '編集画面にアクセスすると、トップページへリダイレクトされること' do
         # URL 上でパスを指定し、アクセスする
@@ -122,7 +122,7 @@ RSpec.describe 'Events', type: :system do
   describe 'イベント削除機能' do
     before do
       visit '/auth/twitter'
-      create(:event, owner_id: User.last.id)
+      FactoryBot.create(:event, owner_id: User.last.id)
     end
 
     it 'イベント削除が完了すること' do

@@ -122,7 +122,7 @@ RSpec.describe EventsController, type: :request do
   end
 
   describe 'GET #show' do
-    let!(:event) { create(:event) }
+    let!(:event) { FactoryBot.create(:event) }
 
     context 'ログイン済みのユーザがアクセスした場合' do
       before { get '/auth/twitter/callback' }
@@ -146,7 +146,7 @@ RSpec.describe EventsController, type: :request do
       before { get '/auth/twitter/callback' }
 
       context 'アクセスユーザが当該イベントのオーナーだった場合' do
-        let!(:event) { create(:event, owner_id: User.order(:created_at).first.id) }
+        let!(:event) { FactoryBot.create(:event, owner_id: User.order(:created_at).first.id) }
 
         it 'イベント編集ページが表示されること' do
           get "/events/#{event.id}/edit"
@@ -155,7 +155,7 @@ RSpec.describe EventsController, type: :request do
       end
 
       context 'アクセスユーザが当該イベントのオーナーでなかった場合' do
-        let!(:event) { create(:event) }
+        let!(:event) { FactoryBot.create(:event) }
 
         it 'error404 のページが表示されること' do
           get "/events/#{event.id}/edit"
@@ -165,7 +165,7 @@ RSpec.describe EventsController, type: :request do
     end
 
     context '未ログインのユーザがアクセスした場合' do
-      let!(:event) { create(:event) }
+      let!(:event) { FactoryBot.create(:event) }
 
       it 'トップページへリダイレクトされること' do
         get "/events/#{event.id}/edit"
@@ -183,7 +183,7 @@ RSpec.describe EventsController, type: :request do
     context 'ログイン済みのユーザが PATCH した場合' do
       before { get '/auth/twitter/callback' }
 
-      let!(:event) { create(:event, owner_id: User.order(:created_at).first.id, content: 'event_content') }
+      let!(:event) { FactoryBot.create(:event, owner_id: User.order(:created_at).first.id, content: 'event_content') }
 
       context '正しい値が入力された場合' do
         let(:params) do
@@ -239,7 +239,7 @@ RSpec.describe EventsController, type: :request do
     end
 
     context '未ログインのユーザが PATCH した場合' do
-      let!(:event) { create(:event, content: 'event_content') }
+      let!(:event) { FactoryBot.create(:event, content: 'event_content') }
 
       let(:params) do
         {
@@ -273,7 +273,7 @@ RSpec.describe EventsController, type: :request do
     context 'ログイン済みのユーザが DELETE した場合' do
       before { get '/auth/twitter/callback' }
 
-      let!(:event) { create(:event, owner_id: User.order(:created_at).first.id) }
+      let!(:event) { FactoryBot.create(:event, owner_id: User.order(:created_at).first.id) }
 
       it 'イベントを削除すること' do
         expect { delete "/events/#{event.id}" }.to change { Event.count }.by(-1)
@@ -286,7 +286,7 @@ RSpec.describe EventsController, type: :request do
     end
 
     context '未ログインのユーザが DELETE した場合' do
-      let!(:event) { create(:event) }
+      let!(:event) { FactoryBot.create(:event) }
 
       it 'イベントが削除されないこと' do
         expect { delete "/events/#{event.id}" }.not_to change { Event.count }

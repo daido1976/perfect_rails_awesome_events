@@ -26,7 +26,7 @@ RSpec.describe Event, type: :model do
 
   describe '#end_time_should_be_after_start_time' do
     context 'end_time が start_time より後の場合' do
-      let(:valid_event) { build(:event, start_time: Time.zone.now, end_time: Time.zone.now + 1.hour) }
+      let(:valid_event) { FactoryBot.build(:event, start_time: Time.zone.now, end_time: Time.zone.now + 1.hour) }
 
       it 'event が有効であること' do
         expect(valid_event).to be_valid
@@ -34,7 +34,7 @@ RSpec.describe Event, type: :model do
     end
 
     context 'end_time が start_time より前の場合' do
-      let(:invalid_event) { build(:event, start_time: Time.zone.now, end_time: Time.zone.now - 1.hour) }
+      let(:invalid_event) { FactoryBot.build(:event, start_time: Time.zone.now, end_time: Time.zone.now - 1.hour) }
 
       it 'event が無効であること' do
         expect(invalid_event).to be_invalid
@@ -46,8 +46,8 @@ RSpec.describe Event, type: :model do
     subject { event.created_by?(user) }
 
     context 'イベントを作ったユーザである場合' do
-      let(:user) { create(:user) }
-      let(:event) { create(:event, owner_id: user.id) }
+      let(:user) { FactoryBot.create(:user) }
+      let(:event) { FactoryBot.create(:event, owner_id: user.id) }
 
       it 'true を返す' do
         expect(subject).to eq true
@@ -55,8 +55,8 @@ RSpec.describe Event, type: :model do
     end
 
     context 'イベントを作ったユーザでない場合' do
-      let(:user) { create(:user) }
-      let(:event) { create(:event) }
+      let(:user) { FactoryBot.create(:user) }
+      let(:event) { FactoryBot.create(:event) }
 
       it 'false を返す' do
         expect(subject).to eq false
