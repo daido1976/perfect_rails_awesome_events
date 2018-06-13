@@ -46,8 +46,8 @@ RSpec.describe EventsController, type: :request do
               name: 'event_name',
               place: 'event_place',
               content: 'event_content',
-              start_time: rand(1..15).days.from_now,
-              end_time: rand(15..30).days.from_now,
+              start_time: Time.zone.now + 1.hour,
+              end_time: Time.zone.now + 2.hours,
             },
           }
         end
@@ -69,8 +69,8 @@ RSpec.describe EventsController, type: :request do
               name: '',
               place: 'event_place',
               content: 'event_content',
-              start_time: rand(1..15).days.from_now,
-              end_time: rand(15..30).days.from_now,
+              start_time: Time.zone.now + 1.hour,
+              end_time: Time.zone.now + 2.hours,
             },
           }
         end
@@ -98,8 +98,8 @@ RSpec.describe EventsController, type: :request do
             name: 'event_name',
             place: 'event_place',
             content: 'event_content',
-            start_time: rand(1..15).hours.from_now,
-            end_time: rand(15..30).hours.from_now,
+            start_time: Time.zone.now + 1.hour,
+            end_time: Time.zone.now + 2.hours,
           },
         }
       end
@@ -191,8 +191,8 @@ RSpec.describe EventsController, type: :request do
               name: 'event_name',
               place: 'event_place',
               content: 'updated_content',
-              start_time: rand(1..15).hours.from_now,
-              end_time: rand(15..30).hours.from_now,
+              start_time: Time.zone.now + 1.hour,
+              end_time: Time.zone.now + 2.hours,
             },
           }
         end
@@ -214,8 +214,8 @@ RSpec.describe EventsController, type: :request do
               name: '',
               place: 'event_place',
               content: 'updated_content',
-              start_time: rand(1..15).days.from_now,
-              end_time: rand(15..30).days.from_now,
+              start_time: Time.zone.now + 1.hour,
+              end_time: Time.zone.now + 2.hours,
             },
           }
         end
@@ -245,8 +245,8 @@ RSpec.describe EventsController, type: :request do
             name: 'event_name',
             place: 'event_place',
             content: 'updated_content',
-            start_time: rand(1..15).hours.from_now,
-            end_time: rand(15..30).hours.from_now,
+            start_time: Time.zone.now + 1.hour,
+            end_time: Time.zone.now + 2.hours,
           },
         }
       end
