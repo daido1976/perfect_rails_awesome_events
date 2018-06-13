@@ -1,6 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe EventsController, type: :request do
+  let!(:user) do
+    FactoryBot.create(
+      :user,
+      provider: 'twitter',
+      uid: '1234567890',
+      nickname: 'hogehoge',
+      image_url: 'http://image.example.com',
+    )
+  end
+
   before do
     OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new(
       provider: 'twitter',
@@ -145,7 +155,7 @@ RSpec.describe EventsController, type: :request do
       before { get '/auth/twitter/callback' }
 
       context 'アクセスユーザが当該イベントのオーナーだった場合' do
-        let!(:event) { FactoryBot.create(:event, owner_id: User.order(:created_at).first.id) }
+        let!(:event) { FactoryBot.create(:event, owner_id: user.id) }
 
         it 'イベント編集ページが表示されること' do
           get "/events/#{event.id}/edit"
@@ -182,7 +192,7 @@ RSpec.describe EventsController, type: :request do
     context 'ログイン済みのユーザが PATCH した場合' do
       before { get '/auth/twitter/callback' }
 
-      let!(:event) { FactoryBot.create(:event, owner_id: User.order(:created_at).first.id, content: 'event_content') }
+      let!(:event) { FactoryBot.create(:event, owner_id: user.id, content: 'event_content') }
 
       context '正しい値が入力された場合' do
         let(:params) do
@@ -271,7 +281,7 @@ RSpec.describe EventsController, type: :request do
     context 'ログイン済みのユーザが DELETE した場合' do
       before { get '/auth/twitter/callback' }
 
-      let!(:event) { FactoryBot.create(:event, owner_id: User.order(:created_at).first.id) }
+      let!(:event) { FactoryBot.create(:event, owner_id: user.id) }
 
       it 'イベントを削除すること' do
         expect { delete "/events/#{event.id}" }.to change { Event.count }.by(-1)
