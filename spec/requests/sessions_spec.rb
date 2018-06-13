@@ -33,7 +33,7 @@ RSpec.describe SessionsController, type: :request do
     end
 
     context 'ユーザが登録済みの場合' do
-      before { create(:user, provider: 'twitter', uid: '1234567890') }
+      before { FactoryBot.create(:user, provider: 'twitter', uid: '1234567890') }
 
       it '新しいユーザが作成されないこと' do
         get '/auth/twitter'

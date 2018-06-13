@@ -1,6 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe EventsController, type: :request do
+  let!(:user) do
+    FactoryBot.create(
+      :user,
+      provider: 'twitter',
+      uid: '1234567890',
+      nickname: 'hogehoge',
+      image_url: 'http://image.example.com',
+    )
+  end
+
   before do
     OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new(
       provider: 'twitter',
@@ -13,93 +23,292 @@ RSpec.describe EventsController, type: :request do
   end
 
   describe 'GET #new' do
-    subject { get '/events/new' }
-
     context 'ログイン済みのユーザがアクセスした場合' do
       before { get '/auth/twitter/callback' }
 
       it 'イベント作成ページが表示されること' do
-        subject
+        get '/events/new'
         expect(response).to render_template('new')
       end
     end
 
     context '未ログインのユーザがアクセスした場合' do
       it 'トップページへリダイレクトされること' do
-        subject
+        get '/events/new'
         expect(response).to redirect_to root_path
       end
 
       it 'アラートが表示されること' do
-        subject
+        get '/events/new'
         expect(flash[:alert]).to be_present
       end
     end
   end
 
   describe 'POST #create' do
-    subject { post '/events', params: event_params }
+    context 'ログイン済みのユーザが POST した場合' do
+      before { get '/auth/twitter/callback' }
 
-    before { get '/auth/twitter/callback' }
+      context '正しい値が入力された場合' do
+        let(:params) do
+          {
+            event: {
+              name: 'event_name',
+              place: 'event_place',
+              content: 'event_content',
+              start_time: Time.zone.now + 1.hour,
+              end_time: Time.zone.now + 2.hours,
+            },
+          }
+        end
 
-    context '正しい値が入力された場合' do
-      let(:event_params) { { event: attributes_for(:event) } }
+        it 'イベントが新規作成されること' do
+          expect { post '/events', params: params }.to change { Event.count }.by(1)
+        end
 
-      it 'イベントが新規作成されること' do
-        expect { subject }.to change { Event.count }.by(1)
+        it 'events/:id にリダイレクトされること' do
+          post '/events', params: params
+          expect(response).to redirect_to("/events/#{Event.order(:created_at).last.id}")
+        end
       end
 
-      it 'events/:id にリダイレクトされること' do
-        subject
-        event_id = Event.last.id
-        expect(response).to redirect_to("/events/#{event_id}")
+      context '名前が入力されなかった場合' do
+        let(:params) do
+          {
+            event: {
+              name: '',
+              place: 'event_place',
+              content: 'event_content',
+              start_time: Time.zone.now + 1.hour,
+              end_time: Time.zone.now + 2.hours,
+            },
+          }
+        end
+
+        it 'イベントが作成されないこと' do
+          expect { post '/events', params: params }.not_to change { Event.count }
+        end
+
+        it 'イベント作成ページが再度表示されること' do
+          post '/events', params: params
+          expect(response).to render_template('new')
+        end
+
+        it 'バリデーションエラーのアラートが表示されること' do
+          post '/events', params: params
+          expect(response.body).to include('名前を入力してください')
+        end
       end
     end
 
-    context '正しい値が入力されなかった場合' do
-      let(:event_params) { { event: attributes_for(:event).merge(name: '') } }
-
-      it 'イベントが作成されないこと' do
-        expect { subject }.not_to change { Event.count }
+    context '未ログインのユーザが POST した場合' do
+      let(:params) do
+        {
+          event: {
+            name: 'event_name',
+            place: 'event_place',
+            content: 'event_content',
+            start_time: Time.zone.now + 1.hour,
+            end_time: Time.zone.now + 2.hours,
+          },
+        }
       end
 
-      it 'イベント作成ページが再度表示されること' do
-        subject
-        expect(response).to render_template('new')
+      it 'イベントが作成されないこと' do
+        expect { post '/events', params: params }.not_to change { Event.count }
+      end
+
+      it 'トップページへリダイレクトされること' do
+        post '/events', params: params
+        expect(response).to redirect_to root_path
+      end
+
+      it 'アラートが表示されること' do
+        post '/events', params: params
+        expect(flash[:alert]).to be_present
       end
     end
   end
 
   describe 'GET #show' do
-    let(:event_id) { Event.last.id }
-
-    shared_examples 'イベント詳細ページが表示されること' do
-      it { expect(response).to render_template('show') }
-    end
-
-    shared_examples '@event に該当するイベントが格納されていること' do
-      it { expect(assigns(:event)).to eq Event.find(event_id) }
-    end
+    let!(:event) { FactoryBot.create(:event) }
 
     context 'ログイン済みのユーザがアクセスした場合' do
-      before do
-        get '/auth/twitter/callback'
-        create(:event)
-        get "/events/#{event_id}"
-      end
+      before { get '/auth/twitter/callback' }
 
-      it_behaves_like 'イベント詳細ページが表示されること'
-      it_behaves_like '@event に該当するイベントが格納されていること'
+      it 'イベント詳細ページが表示されること' do
+        get "/events/#{event.id}"
+        expect(response).to render_template('show')
+      end
     end
 
     context '未ログインのユーザがアクセスした場合' do
-      before do
-        create(:event)
-        get "/events/#{event_id}"
+      it 'イベント詳細ページが表示されること' do
+        get "/events/#{event.id}"
+        expect(response).to render_template('show')
+      end
+    end
+  end
+
+  describe 'GET #edit' do
+    context 'ログイン済みのユーザがアクセスした場合' do
+      before { get '/auth/twitter/callback' }
+
+      context 'アクセスユーザが当該イベントのオーナーだった場合' do
+        let!(:event) { FactoryBot.create(:event, owner_id: user.id) }
+
+        it 'イベント編集ページが表示されること' do
+          get "/events/#{event.id}/edit"
+          expect(response).to render_template('edit')
+        end
       end
 
-      it_behaves_like 'イベント詳細ページが表示されること'
-      it_behaves_like '@event に該当するイベントが格納されていること'
+      context 'アクセスユーザが当該イベントのオーナーでなかった場合' do
+        let!(:event) { FactoryBot.create(:event) }
+
+        it 'error404 のページが表示されること' do
+          get "/events/#{event.id}/edit"
+          expect(response).to render_template('error404')
+        end
+      end
+    end
+
+    context '未ログインのユーザがアクセスした場合' do
+      let!(:event) { FactoryBot.create(:event) }
+
+      it 'トップページへリダイレクトされること' do
+        get "/events/#{event.id}/edit"
+        expect(response).to redirect_to root_path
+      end
+
+      it 'アラートが表示されること' do
+        get "/events/#{event.id}/edit"
+        expect(flash[:alert]).to be_present
+      end
+    end
+  end
+
+  describe 'PATCH #update' do
+    context 'ログイン済みのユーザが PATCH した場合' do
+      before { get '/auth/twitter/callback' }
+
+      let!(:event) { FactoryBot.create(:event, owner_id: user.id, content: 'event_content') }
+
+      context '正しい値が入力された場合' do
+        let(:params) do
+          {
+            event: {
+              name: 'event_name',
+              place: 'event_place',
+              content: 'updated_content',
+              start_time: Time.zone.now + 1.hour,
+              end_time: Time.zone.now + 2.hours,
+            },
+          }
+        end
+
+        it 'イベント情報が更新されること' do
+          expect { patch "/events/#{event.id}", params: params }.to change { Event.find(event.id).content }.from('event_content').to('updated_content')
+        end
+
+        it 'events/:id にリダイレクトされること' do
+          patch "/events/#{event.id}", params: params
+          expect(response).to redirect_to("/events/#{event.id}")
+        end
+      end
+
+      context '名前が入力されなかった場合' do
+        let(:params) do
+          {
+            event: {
+              name: '',
+              place: 'event_place',
+              content: 'updated_content',
+              start_time: Time.zone.now + 1.hour,
+              end_time: Time.zone.now + 2.hours,
+            },
+          }
+        end
+
+        it 'イベント情報が更新されないこと' do
+          expect { patch "/events/#{event.id}", params: params }.not_to change { Event.find(event.id).content }
+        end
+
+        it 'イベント編集ページが再度表示されること' do
+          patch "/events/#{event.id}", params: params
+          expect(response).to render_template('edit')
+        end
+
+        it 'バリデーションエラーのアラートが表示されること' do
+          patch "/events/#{event.id}", params: params
+          expect(response.body).to include('名前を入力してください')
+        end
+      end
+    end
+
+    context '未ログインのユーザが PATCH した場合' do
+      let(:params) do
+        {
+          event: {
+            name: 'event_name',
+            place: 'event_place',
+            content: 'updated_content',
+            start_time: Time.zone.now + 1.hour,
+            end_time: Time.zone.now + 2.hours,
+          },
+        }
+      end
+
+      let!(:event) { FactoryBot.create(:event, content: 'event_content') }
+
+      it 'イベント情報が更新されないこと' do
+        expect { patch "/events/#{event.id}", params: params }.not_to change { Event.find(event.id).content }
+      end
+
+      it 'トップページへリダイレクトされること' do
+        patch "/events/#{event.id}", params: params
+        expect(response).to redirect_to root_path
+      end
+
+      it 'アラートが表示されること' do
+        patch "/events/#{event.id}", params: params
+        expect(flash[:alert]).to be_present
+      end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    context 'ログイン済みのユーザが DELETE した場合' do
+      let!(:event) { FactoryBot.create(:event, owner_id: user.id) }
+
+      before { get '/auth/twitter/callback' }
+
+      it 'イベントを削除すること' do
+        expect { delete "/events/#{event.id}" }.to change { Event.count }.by(-1)
+      end
+
+      it 'トップページへリダイレクトされること' do
+        delete "/events/#{event.id}"
+        expect(response).to redirect_to root_path
+      end
+    end
+
+    context '未ログインのユーザが DELETE した場合' do
+      let!(:event) { FactoryBot.create(:event) }
+
+      it 'イベントが削除されないこと' do
+        expect { delete "/events/#{event.id}" }.not_to change { Event.count }
+      end
+
+      it 'トップページへリダイレクトされること' do
+        delete "/events/#{event.id}"
+        expect(response).to redirect_to root_path
+      end
+
+      it 'アラートが表示されること' do
+        delete "/events/#{event.id}"
+        expect(flash[:alert]).to be_present
+      end
     end
   end
 end
