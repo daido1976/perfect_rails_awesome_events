@@ -1,6 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe 'Events', type: :system do
+  let!(:user) do
+    FactoryBot.create(
+      :user,
+      provider: 'twitter',
+      uid: '1234567890',
+      nickname: 'hogehoge',
+      image_url: 'http://image.example.com',
+    )
+  end
+
   before do
     OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new(
       provider: 'twitter',
@@ -61,7 +71,7 @@ RSpec.describe 'Events', type: :system do
       before { visit '/auth/twitter' }
 
       context 'ユーザが当該イベントのオーナーだった場合' do
-        let!(:event) { FactoryBot.create(:event, owner_id: User.last.id) }
+        let!(:event) { FactoryBot.create(:event, owner_id: user.id) }
 
         it '編集が完了すること' do
           # イベント詳細画面にアクセスする
@@ -118,7 +128,7 @@ RSpec.describe 'Events', type: :system do
   end
 
   describe 'イベント削除機能' do
-    let!(:event) { FactoryBot.create(:event, owner_id: User.last.id) }
+    let!(:event) { FactoryBot.create(:event, owner_id: user.id) }
 
     before { visit '/auth/twitter' }
 
