@@ -58,7 +58,7 @@ RSpec.describe EventsController, type: :request do
 
         it 'events/:id にリダイレクトされること' do
           post '/events', params: params
-          expect(response).to redirect_to("/events/#{Event.last.id}")
+          expect(response).to redirect_to("/events/#{Event.order(:created_at).last.id}")
         end
       end
 
@@ -141,7 +141,7 @@ RSpec.describe EventsController, type: :request do
       before { get '/auth/twitter/callback' }
 
       context 'アクセスユーザが当該イベントのオーナーだった場合' do
-        let!(:event) { create(:event, owner_id: User.last.id) }
+        let!(:event) { create(:event, owner_id: User.order(:created_at).first.id) }
 
         it 'イベント編集ページが表示されること' do
           get "/events/#{event.id}/edit"
@@ -178,7 +178,7 @@ RSpec.describe EventsController, type: :request do
     context 'ログイン済みのユーザが PATCH した場合' do
       before { get '/auth/twitter/callback' }
 
-      let!(:event) { create(:event, owner_id: User.last.id, content: 'event_content') }
+      let!(:event) { create(:event, owner_id: User.order(:created_at).first.id, content: 'event_content') }
 
       context '正しい値が入力された場合' do
         let(:params) do
@@ -263,7 +263,7 @@ RSpec.describe EventsController, type: :request do
     context 'ログイン済みのユーザが DELETE した場合' do
       before { get '/auth/twitter/callback' }
 
-      let!(:event) { create(:event, owner_id: User.last.id) }
+      let!(:event) { create(:event, owner_id: User.order(:created_at).first.id) }
 
       it 'イベントを削除すること' do
         expect { delete "/events/#{event.id}" }.to change { Event.count }.by(-1)
