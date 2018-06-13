@@ -84,6 +84,11 @@ RSpec.describe EventsController, type: :request do
           post '/events', params: params
           expect(response).to render_template('new')
         end
+
+        it 'バリデーションエラーのアラートが表示されること' do
+          post '/events', params: params
+          expect(response.body).to include('名前を入力してください')
+        end
       end
     end
 
@@ -224,6 +229,11 @@ RSpec.describe EventsController, type: :request do
         it 'イベント編集ページが再度表示されること' do
           patch "/events/#{event.id}", params: params
           expect(response).to render_template('edit')
+        end
+
+        it 'バリデーションエラーのアラートが表示されること' do
+          patch "/events/#{event.id}", params: params
+          expect(response.body).to include('名前を入力してください')
         end
       end
     end
