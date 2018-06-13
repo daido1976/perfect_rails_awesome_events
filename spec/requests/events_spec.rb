@@ -247,8 +247,6 @@ RSpec.describe EventsController, type: :request do
     end
 
     context '未ログインのユーザが PATCH した場合' do
-      let!(:event) { FactoryBot.create(:event, content: 'event_content') }
-
       let(:params) do
         {
           event: {
@@ -260,6 +258,8 @@ RSpec.describe EventsController, type: :request do
           },
         }
       end
+
+      let!(:event) { FactoryBot.create(:event, content: 'event_content') }
 
       it 'イベント情報が更新されないこと' do
         expect { patch "/events/#{event.id}", params: params }.not_to change { Event.find(event.id).content }
@@ -279,9 +279,9 @@ RSpec.describe EventsController, type: :request do
 
   describe 'DELETE #destroy' do
     context 'ログイン済みのユーザが DELETE した場合' do
-      before { get '/auth/twitter/callback' }
-
       let!(:event) { FactoryBot.create(:event, owner_id: user.id) }
+
+      before { get '/auth/twitter/callback' }
 
       it 'イベントを削除すること' do
         expect { delete "/events/#{event.id}" }.to change { Event.count }.by(-1)
