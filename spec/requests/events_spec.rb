@@ -12,8 +12,6 @@ RSpec.describe EventsController, type: :request do
     )
   end
 
-  let(:event_id) { Event.last.id }
-
   describe 'GET #new' do
     context 'ログイン済みのユーザがアクセスした場合' do
       before { get '/auth/twitter/callback' }
@@ -60,7 +58,7 @@ RSpec.describe EventsController, type: :request do
 
         it 'events/:id にリダイレクトされること' do
           post '/events', params: params
-          expect(response).to redirect_to("/events/#{event_id}")
+          expect(response).to redirect_to("/events/#{Event.last.id}")
         end
       end
 
@@ -119,25 +117,20 @@ RSpec.describe EventsController, type: :request do
   end
 
   describe 'GET #show' do
+    let!(:event) { create(:event) }
+
     context 'ログイン済みのユーザがアクセスした場合' do
-      before do
-        get '/auth/twitter/callback'
-        create(:event)
-      end
+      before { get '/auth/twitter/callback' }
 
       it 'イベント詳細ページが表示されること' do
-        get "/events/#{event_id}"
+        get "/events/#{event.id}"
         expect(response).to render_template('show')
       end
     end
 
     context '未ログインのユーザがアクセスした場合' do
-      before do
-        create(:event)
-      end
-
       it 'イベント詳細ページが表示されること' do
-        get "/events/#{event_id}"
+        get "/events/#{event.id}"
         expect(response).to render_template('show')
       end
     end
@@ -148,40 +141,34 @@ RSpec.describe EventsController, type: :request do
       before { get '/auth/twitter/callback' }
 
       context 'アクセスユーザが当該イベントのオーナーだった場合' do
-        before do
-          create(:event, owner_id: User.last.id)
-        end
+        let!(:event) { create(:event, owner_id: User.last.id) }
 
         it 'イベント編集ページが表示されること' do
-          get "/events/#{event_id}/edit"
+          get "/events/#{event.id}/edit"
           expect(response).to render_template('edit')
         end
       end
 
       context 'アクセスユーザが当該イベントのオーナーでなかった場合' do
-        before do
-          create(:event)
-        end
+        let!(:event) { create(:event) }
 
         it 'error404 のページが表示されること' do
-          get "/events/#{event_id}/edit"
+          get "/events/#{event.id}/edit"
           expect(response).to render_template('error404')
         end
       end
     end
 
     context '未ログインのユーザがアクセスした場合' do
-      before do
-        create(:event)
-      end
+      let!(:event) { create(:event) }
 
       it 'トップページへリダイレクトされること' do
-        get "/events/#{event_id}/edit"
+        get "/events/#{event.id}/edit"
         expect(response).to redirect_to root_path
       end
 
       it 'アラートが表示されること' do
-        get "/events/#{event_id}/edit"
+        get "/events/#{event.id}/edit"
         expect(flash[:alert]).to be_present
       end
     end
@@ -189,10 +176,9 @@ RSpec.describe EventsController, type: :request do
 
   describe 'PATCH #update' do
     context 'ログイン済みのユーザが PATCH した場合' do
-      before do
-        get '/auth/twitter/callback'
-        create(:event, owner_id: User.last.id, content: 'event_content')
-      end
+      before { get '/auth/twitter/callback' }
+
+      let!(:event) { create(:event, owner_id: User.last.id, content: 'event_content') }
 
       context '正しい値が入力された場合' do
         let(:params) do
@@ -208,12 +194,12 @@ RSpec.describe EventsController, type: :request do
         end
 
         it 'イベント情報が更新されること' do
-          expect { patch "/events/#{event_id}", params: params }.to change { Event.find(event_id).content }.from('event_content').to('updated_content')
+          expect { patch "/events/#{event.id}", params: params }.to change { Event.find(event.id).content }.from('event_content').to('updated_content')
         end
 
         it 'events/:id にリダイレクトされること' do
-          patch "/events/#{event_id}", params: params
-          expect(response).to redirect_to("/events/#{event_id}")
+          patch "/events/#{event.id}", params: params
+          expect(response).to redirect_to("/events/#{event.id}")
         end
       end
 
@@ -232,18 +218,18 @@ RSpec.describe EventsController, type: :request do
         end
 
         it 'イベント情報が更新されないこと' do
-          expect { patch "/events/#{event_id}", params: params }.not_to change { Event.find(event_id).content }
+          expect { patch "/events/#{event.id}", params: params }.not_to change { Event.find(event.id).content }
         end
 
         it 'イベント編集ページが再度表示されること' do
-          patch "/events/#{event_id}", params: params
+          patch "/events/#{event.id}", params: params
           expect(response).to render_template('edit')
         end
       end
     end
 
     context '未ログインのユーザが PATCH した場合' do
-      before { create(:event, content: 'event_content') }
+      let!(:event) { create(:event, content: 'event_content') }
 
       let(:params) do
         {
@@ -258,16 +244,16 @@ RSpec.describe EventsController, type: :request do
       end
 
       it 'イベント情報が更新されないこと' do
-        expect { patch "/events/#{event_id}", params: params }.not_to change { Event.find(event_id).content }
+        expect { patch "/events/#{event.id}", params: params }.not_to change { Event.find(event.id).content }
       end
 
       it 'トップページへリダイレクトされること' do
-        patch "/events/#{event_id}", params: params
+        patch "/events/#{event.id}", params: params
         expect(response).to redirect_to root_path
       end
 
       it 'アラートが表示されること' do
-        patch "/events/#{event_id}", params: params
+        patch "/events/#{event.id}", params: params
         expect(flash[:alert]).to be_present
       end
     end
@@ -275,35 +261,34 @@ RSpec.describe EventsController, type: :request do
 
   describe 'DELETE #destroy' do
     context 'ログイン済みのユーザが DELETE した場合' do
-      before do
-        get '/auth/twitter/callback'
-        create(:event, owner_id: User.last.id)
-      end
+      before { get '/auth/twitter/callback' }
+
+      let!(:event) { create(:event, owner_id: User.last.id) }
 
       it 'イベントを削除すること' do
-        expect { delete "/events/#{event_id}" }.to change { Event.count }.by(-1)
+        expect { delete "/events/#{event.id}" }.to change { Event.count }.by(-1)
       end
 
       it 'トップページへリダイレクトされること' do
-        delete "/events/#{event_id}"
+        delete "/events/#{event.id}"
         expect(response).to redirect_to root_path
       end
     end
 
     context '未ログインのユーザが DELETE した場合' do
-      before { create(:event) }
+      let!(:event) { create(:event) }
 
       it 'イベントが削除されないこと' do
-        expect { delete "/events/#{event_id}" }.not_to change { Event.count }
+        expect { delete "/events/#{event.id}" }.not_to change { Event.count }
       end
 
       it 'トップページへリダイレクトされること' do
-        delete "/events/#{event_id}"
+        delete "/events/#{event.id}"
         expect(response).to redirect_to root_path
       end
 
       it 'アラートが表示されること' do
-        delete "/events/#{event_id}"
+        delete "/events/#{event.id}"
         expect(flash[:alert]).to be_present
       end
     end
