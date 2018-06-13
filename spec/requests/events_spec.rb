@@ -62,8 +62,7 @@ RSpec.describe EventsController, type: :request do
         end
       end
 
-      context '正しい値が入力されなかった場合' do
-        # name が入力されていない
+      context '名前が入力されなかった場合' do
         let(:params) do
           {
             event: {
@@ -208,8 +207,7 @@ RSpec.describe EventsController, type: :request do
         end
       end
 
-      context '正しい値が入力されなかった場合' do
-        # name が入力されていない
+      context '名前が入力されなかった場合' do
         let(:params) do
           {
             event: {
