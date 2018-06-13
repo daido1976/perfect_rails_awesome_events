@@ -14,8 +14,6 @@ RSpec.describe 'Events', type: :system do
     travel_to Time.zone.local(2018, 1, 1, 0o0, 0o0)
   end
 
-  let(:event_id) { Event.last.id }
-
   describe 'イベント登録機能' do
     context 'ログイン済みユーザの場合' do
       before { visit '/auth/twitter' }
@@ -63,11 +61,11 @@ RSpec.describe 'Events', type: :system do
       before { visit '/auth/twitter' }
 
       context 'ユーザが当該イベントのオーナーだった場合' do
-        before { FactoryBot.create(:event, owner_id: User.last.id) }
+        let!(:event) { FactoryBot.create(:event, owner_id: User.last.id) }
 
         it '編集が完了すること' do
           # イベント詳細画面にアクセスする
-          visit "events/#{event_id}"
+          visit "events/#{event.id}"
 
           # イベント編集ボタンを押し、編集画面にアクセスする
           click_on 'イベントを編集する'
@@ -97,22 +95,22 @@ RSpec.describe 'Events', type: :system do
       end
 
       context 'ユーザが当該イベントのオーナーでなかった場合' do
-        before { FactoryBot.create(:event) }
+        let!(:event) { FactoryBot.create(:event) }
 
         it '編集画面にアクセスすると、error404 のページが表示されること' do
           # URL 上でパスを指定し、アクセスする
-          visit "events/#{event_id}/edit"
+          visit "events/#{event.id}/edit"
           expect(page).to have_content 'ご指定になったページは存在しません'
         end
       end
     end
 
     context '未ログインユーザの場合' do
-      before { FactoryBot.create(:event) }
+      let!(:event) { FactoryBot.create(:event) }
 
       it '編集画面にアクセスすると、トップページへリダイレクトされること' do
         # URL 上でパスを指定し、アクセスする
-        visit "events/#{event_id}/edit"
+        visit "events/#{event.id}/edit"
         expect(page).to have_content 'ログインしてください'
         expect(page).to have_content 'イベント一覧'
       end
@@ -120,14 +118,13 @@ RSpec.describe 'Events', type: :system do
   end
 
   describe 'イベント削除機能' do
-    before do
-      visit '/auth/twitter'
-      FactoryBot.create(:event, owner_id: User.last.id)
-    end
+    let!(:event) { FactoryBot.create(:event, owner_id: User.last.id) }
+
+    before { visit '/auth/twitter' }
 
     it 'イベント削除が完了すること' do
       # イベント詳細画面にアクセスする
-      visit "events/#{event_id}"
+      visit "events/#{event.id}"
 
       # イベント削除ボタンを押す
       click_on 'イベントを削除する'
