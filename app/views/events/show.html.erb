@@ -61,7 +61,7 @@
                 <span aria-hidden='true'>&times;</span>
               </button>
             </div>
-            <%= form_for(@event.tickets.build, url: event_tickets_path(@event), remote: true) do |f| %>
+            <%= form_with(model: [@event, Ticket.new], url: event_tickets_path(@event), id: 'new_ticket') do |f| %>
               <div class='modal-body'>
                 <%= f.text_field :comment, class: 'form-control' %>
               </div>
