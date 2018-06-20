@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :ticket do
-    user nil
-    event nil
-    comment 'MyString'
+    user
+    event
+    comment 'ticket_comment'
   end
 end
