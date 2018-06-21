@@ -8,8 +8,8 @@
       <div class='card-header'>
         主催者
       </div>
-      <div class="card-body">
-        <%= link_to("https://twitter.com/#{@event.owner.nickname}", class: 'card-link text-dark') do %>
+      <div class='card-body'>
+        <%= link_to(url_for_twitter(@event.owner), class: 'card-link text-dark') do %>
         <%= image_tag @event.owner.image_url %>
         <%= "@#{@event.owner.nickname}" %>
         <% end %>
@@ -19,7 +19,7 @@
       <div class='card-header'>
         開催時間
       </div>
-      <div class="card-body">
+      <div class='card-body'>
         <%= l @event.start_time, format: :full_date %> - <%= l @event.end_time, format: :full_date %>
       </div>
     </div>
@@ -27,7 +27,7 @@
       <div class='card-header'>
         開催場所
       </div>
-      <div class="card-body">
+      <div class='card-body'>
         <%= @event.place %>
       </div>
     </div>
@@ -35,7 +35,7 @@
       <div class='card-header'>
         イベント内容
       </div>
-      <div class="card-body">
+      <div class='card-body'>
         <%= @event.content %>
       </div>
     </div>
@@ -46,5 +46,54 @@
       <%= link_to 'イベントを編集する', edit_event_path(@event), class: 'btn btn-info btn-lg btn-block' %>
       <%= link_to 'イベントを削除する', event_path(@event), class: 'btn btn-danger btn-lg btn-block',method: :delete, data: { confirm: '本当に削除しますか？' }  %>
     <% end %>
+    <% if @ticket %>
+      <%= link_to '参加をキャンセルする', event_ticket_path(@event, @ticket), method: :delete, class: 'btn btn-warning btn-lg btn-block'%>
+    <% elsif logged_in? %>
+      <button type='button' class='btn btn-primary btn-lg btn-block' data-toggle='modal' data-target='#createTicket'>
+        参加する
+      </button>
+      <div class='modal fade' id='createTicket' tabindex='-1' role='dialog' aria-labelledby='dialogHeader' aria-hidden='true'>
+        <div class='modal-dialog' role='document'>
+          <div class='modal-content'>
+            <div class='modal-header'>
+              <h4 class='modal-title' id='dialogHeader'>参加コメント</h4>
+              <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                <span aria-hidden='true'>&times;</span>
+              </button>
+            </div>
+            <%= form_with(model: [@event, @new_ticket], url: event_tickets_path(@event), id: 'new_ticket') do |f| %>
+              <div class='modal-body'>
+                <%= f.text_field :comment, class: 'form-control' %>
+              </div>
+              <div class='modal-footer'>
+                <button type='button' class='btn btn-secondary' data-dismiss='modal'>キャンセル</button>
+                <%= f.button '送信', class: 'btn btn-primary', data: { disable_with: '送信中…' } %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <button type='button' class='btn btn-secondary btn-lg btn-block' disabled>参加するにはログインが必要です</button>
+    <% end %>
+    <hr>
+    <div class='card'>
+      <div class='card-header'>
+        参加者
+      </div>
+      <div class='card-body'>
+        <ul class='list-unstyled mb-0'>
+          <% @tickets.each do |ticket| %>
+            <li>
+              <%= link_to(url_for_twitter(ticket.user), class: 'card-link text-dark') do %>
+              <%= image_tag ticket.user.image_url, width: 20, height: 20 %>
+              <%= "@#{ticket.user.nickname}" %>
+              <% end %>
+              <%= ticket.comment %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>
