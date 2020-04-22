@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  postgres: # (*1)
+    image: postgres:10.11-alpine
+    container_name: perfect-rails-postgres
+    ports:
+      - 5432:5432 # Rails との接続用
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data:
+# (*1) psql を使って接続可能
+# $ docker-compose run --rm postgres psql -h perfect-rails-postgres -U postgres
